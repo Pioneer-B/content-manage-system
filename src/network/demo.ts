@@ -1,6 +1,7 @@
 //导入的axios是一个实例过的对象，可以直接调用他内部的方法
-import axios, { AxiosResponse } from 'axios'
 // 152.136.185.210:7878/api/hy66/home/multidata
+
+import axios, { AxiosResponse } from 'axios'
 
 axios
   .get('http://152.136.185.210:7878/api/hy66/home/multidata')
