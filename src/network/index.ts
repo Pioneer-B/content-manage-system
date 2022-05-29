@@ -5,6 +5,8 @@ import { BASE_URL, TIME_OUT } from './request/config'
 
 import { HeadType } from './request/type'
 
+import cache from '@/utils/cache'
+
 const Request = new RequestClass({
   baseURL: BASE_URL,
   timeout: TIME_OUT,
@@ -14,7 +16,7 @@ const Request = new RequestClass({
   interceptors: {
     requestInterceptors: (config: HeadType) => {
       // 携带token的拦截
-      const token = ''
+      const token = cache.getCache('token')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }

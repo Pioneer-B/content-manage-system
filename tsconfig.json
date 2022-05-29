@@ -1,23 +1,28 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": ["webpack-env"],
-    "paths": {
+    "target": "esnext", // 目标代码：es6+
+    "module": "esnext", // 模块化方案：commonjs; esnext(es module)
+    "strict": true, // 严格模式
+    "jsx": "preserve", // 对jsx做preserve转化， preserve->保留，就是不转化
+    "moduleResolution": "node", //按照node的方式去解析模块
+    "skipLibCheck": true, //跳过一些库的检测 1.提高性能 2.防止类型冲突(多个库定义了相同的类型)
+    // export default 和 module.export= {}能不能混合使用
+    // 也就是es module 和 commonjs能不能一起使用。第11,12行属性一般都是一起的
+    "esModuleInterop": true,//
+    "allowSyntheticDefaultImports": true, //
+    "forceConsistentCasingInFileNames": true, //
+    "useDefineForClassFields": true, //
+    "sourceMap": true, //是否生成映射文件，调试时会跳到相应的文件去
+    "baseUrl": ".", //文件路径在解析时，基本url
+    "types": ["webpack-env"], //
+    "paths": { //路径解析，类似webpack的alis
       "@/*": ["src/*"]
     },
+    // 指定项目中可以使用哪些库的类型
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
+  //哪些文件类型需要编译解析
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
+  // 排除那些文件的编译解析
   "exclude": ["node_modules"]
 }

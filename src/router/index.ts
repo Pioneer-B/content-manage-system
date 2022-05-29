@@ -1,26 +1,39 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import cache from '@/utils/cache'
 
 // vue是ts写的，也就是routes在内部已经定义好了类型
 // 点进createRouter函数可以看到routes和history的类型
 const routes: RouteRecordRaw[] = [
-  // {
-  //   path: '/',
-  //   redirect: '/login'
-  // },
+  {
+    path: '/',
+    redirect: '/main'
+  },
   {
     path: '/login',
-    component: () => import('../view/login/Login.vue')
+    name: 'login',
+    component: () => import('@/view/login/Login.vue')
   },
   {
     path: '/main',
-    component: () => import('../view/main/Main.vue')
+    name: 'main',
+    component: () => import('@/view/main/Main.vue')
   }
 ]
 
 const router = createRouter({
   routes,
-  history: createWebHistory()
+  // 为什么写createWebHistory就不能刷新页面？
+  history: createWebHashHistory()
+})
+
+router.beforeEach((to) => {
+  if (to.path !== '/login') {
+    const token = cache.getCache('token')
+    if (!token) {
+      return '/login'
+    }
+  }
 })
 
 export default router

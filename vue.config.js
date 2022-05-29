@@ -2,7 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 // const path = require('path')
 
 module.exports = defineConfig({
-  publicPath: './',
+  // publicPath: './',
   transpileDependencies: true,
   // 1.配置方式一：CLI提供的属性；名称可能和webpack不一样，但是作用是一样的
   outputDir: './build',
@@ -10,7 +10,8 @@ module.exports = defineConfig({
   configureWebpack: {
     resolve: {
       alias: {
-        components: '@/components'
+        components: '@/components',
+        assets: '@/assets'
       }
     }
   }
