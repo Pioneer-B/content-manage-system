@@ -1,5 +1,5 @@
-import { createStore } from 'vuex'
-import { RootState } from './index-type'
+import { createStore, Store, useStore } from 'vuex'
+import { RootState, IStoreType } from './index-type'
 
 import loginModule from './module-login/login'
 
@@ -17,6 +17,15 @@ const store = createStore<RootState>({
 
 export function setupStore() {
   store.dispatch('loginModule/loadCacheData')
+}
+
+/**
+ *IStoreType是将rootState和loginModuleState的交叉类型
+ *这样做的原因：
+ *vuex对ts支持不是很好，store.state.子module，是没有类型检测的
+ */
+export function myUseStore(): Store<IStoreType> {
+  return useStore()
 }
 
 export default store

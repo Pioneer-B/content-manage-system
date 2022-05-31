@@ -4,6 +4,7 @@ import { LoginState } from './login-type'
 import { RootState } from '../index-type'
 
 import cache from '@/utils/cache'
+import mapMenusToRoutes from '@/utils/map-menus'
 
 import {
   accountLoginRequest,
@@ -30,6 +31,11 @@ const loginModule: Module<LoginState, RootState> = {
     },
     changeUserMenu(state, userMenu: any) {
       state.userMenu = userMenu
+      // 将该账号权限能看到的菜单动态添加到main的子路由下
+      const routes = mapMenusToRoutes(userMenu)
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {
