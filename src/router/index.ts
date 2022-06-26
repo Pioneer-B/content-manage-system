@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import cache from '@/utils/cache'
+import { firstMenu } from '@/utils/map-menus'
 
 // vue是ts写的，也就是routes在内部已经定义好了类型
 // 点进createRouter函数可以看到routes和history的类型
@@ -17,8 +18,8 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/main',
     name: 'main',
-    component: () => import('@/view/main/Main.vue'),
-    children: []
+    component: () => import('@/view/main/Main.vue')
+    // children: [] 根据userMenu来决定children
   },
   {
     path: '/:pathMatch(.*)',
@@ -38,6 +39,12 @@ router.beforeEach((to) => {
     if (!token) {
       return '/login'
     }
+  }
+  // console.log(router.getRoutes())
+  // console.log(to, from)
+
+  if (to.path === '/main') {
+    return firstMenu.url
   }
 })
 

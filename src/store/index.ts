@@ -1,5 +1,6 @@
 import { createStore, Store, useStore } from 'vuex'
 import { RootState, IStoreType } from './index-type'
+import moduleSystem from './main/module-system/system'
 
 import loginModule from './module-login/login'
 
@@ -12,7 +13,10 @@ const store = createStore<RootState>({
   getters: {},
   mutations: {},
   actions: {},
-  modules: { loginModule }
+  modules: {
+    loginModule,
+    moduleSystem
+  }
 })
 
 export function setupStore() {

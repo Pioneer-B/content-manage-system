@@ -14,7 +14,9 @@
         </el-header>
         <!-- 主体 -->
         <el-main class="page-content">
-          <router-view />
+          <div class="page-info">
+            <router-view />
+          </div>
         </el-main>
       </el-container>
     </el-container>

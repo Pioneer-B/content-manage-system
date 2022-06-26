@@ -12,3 +12,8 @@ declare let $store: any
  * 所以我们每个.vue文件导出的类型都是component对象
  * export default defineComponent({})
  */
+
+declare module '*.jpg' {
+  const src: string
+  export default src
+}

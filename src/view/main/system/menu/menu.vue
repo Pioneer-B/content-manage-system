@@ -1,15 +1,23 @@
 <template>
   <div class="menu">
     <h2>menu</h2>
+
+    <!-- <h2 @click="click">{{ comput }}</h2> -->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { watch, defineComponent, ref } from 'vue'
 
 export default defineComponent({
-  name: 'menu',
-  setup() {
+  props: {
+    modelValue: {
+      type: Object,
+      required: true
+    }
+  },
+  emits: ['update:model-value'],
+  setup(props, { emit }) {
     return {}
   }
 })
