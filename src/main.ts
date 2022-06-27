@@ -8,6 +8,7 @@ import { setupStore } from './store/index'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElIcon from '@element-plus/icons-vue'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 // import Request from './network/index'
 
@@ -22,13 +23,16 @@ for (const iconName in ElIcon) {
 }
 
 app.use(store)
-// 注：27.28行不能交换位置，不然刷新会匹配到notFound页面
+// 注：29.30行不能交换位置，不然刷新会匹配到notFound页面
 // 原因：执行router时，还没有动态注入路径，所以main/system/user匹配到的routes是notFound；导航守卫是回调，这时候还不会执行
 // 执行setupStore，动态注入路径，等同步代码执行完，会执行导航守卫；to在之前就确定了，是notFound
 setupStore() // 把本地数据拷贝到state并注入router路径
 app.use(router)
 app.use(globalRegister)
-app.use(ElementPlus).mount('#app')
+app.use(ElementPlus, {
+  locale: zhCn
+})
+app.mount('#app')
 
 // 同一个实例的部分请求的拦截
 // Request.request({

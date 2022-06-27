@@ -1,6 +1,8 @@
 export interface ISystemState {
-  userList: any[]
-  userCount: number
+  usersList: any[]
+  usersCount: number
+  roleList: any[]
+  roleCount: number
 }
 
 // 返回数据的类型

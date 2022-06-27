@@ -1,25 +1,28 @@
 <template>
   <div class="role">
-    <h2>role</h2>
-    <Menu v-model="formData"></Menu>
-    <!-- <Menu :modelValue="message" @update:model-value="message = $event"></Menu> -->
-    <h2>{{ formData.name }}</h2>
-    <h2>{{ formData.age }}</h2>
+    <page-search :searchFromConfig="searchFromConfig"></page-search>
+    <page-content
+      :contentTableConfig="contentTableConfig"
+      pageName="role"
+      defaultBtn="新建角色"
+    ></page-content>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import Menu from '../menu/menu.vue'
+import { defineComponent } from 'vue'
+
+import PageContent from '@/components/page-content/src/page-content.vue'
+import PageSearch from '@/components/page-search/src/page-search.vue'
+
+import { contentTableConfig } from './config/content.config'
+import { searchFromConfig } from './config/search.config'
 
 export default defineComponent({
   name: 'role',
-  components: {
-    Menu
-  },
+  components: { PageContent, PageSearch },
   setup() {
-    const formData: any = ref({ name: 's', age: 's' })
-    return { formData }
+    return { contentTableConfig, searchFromConfig }
   }
 })
 </script>
