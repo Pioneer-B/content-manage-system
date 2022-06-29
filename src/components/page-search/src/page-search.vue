@@ -9,7 +9,7 @@
         <div class="footer-btn">
           <el-button>
             <el-icon><Refresh /></el-icon>
-            <div class="btn-col">重置</div>
+            <div class="btn-col" @click="handleResetClick">重置</div>
           </el-button>
           <el-button type="primary">
             <el-icon><Search /></el-icon>
@@ -33,16 +33,19 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
-    const formData = ref({
-      id: '',
-      name: '',
-      password: '',
-      sport: '',
-      createTime: ''
-    })
-
-    return { formData }
+  setup(props) {
+    // 双向绑定的属性应该是由配置文件的filed属性来动态决定
+    const formItems = props.searchFromConfig.formItems ?? []
+    const originFormDate: any = {}
+    for (const item of formItems) {
+      originFormDate[`${item.filed}`] = ''
+    }
+    const formData = ref(originFormDate)
+    const handleResetClick = () => {
+      formData.value = originFormDate
+      console.log(originFormDate, formData)
+    }
+    return { formData, handleResetClick }
   }
 })
 </script>
