@@ -61,8 +61,6 @@ export default defineComponent({
           // 1.判断是否需要记住密码
           if (checked) {
             if (!window.localStorage.getItem('name')) {
-              console.log(1)
-
               cache.setCache('name', ruleForm.name)
               cache.setCache('password', ruleForm.password)
             }

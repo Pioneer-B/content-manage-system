@@ -4,13 +4,14 @@ import { LoginState } from './login-type'
 import { RootState } from '../index-type'
 
 import cache from '@/utils/cache'
-import mapMenusToRoutes from '@/utils/map-menus'
+import mapMenusToRoutes, { mapMenusToPermission } from '@/utils/map-menus'
 
 import {
   accountLoginRequest,
   requestUserInfoById,
   requestUserMenusByRoleId
 } from '@/network/network-login/login'
+import { delatePageDate } from '@/network/main/network-system/network-system'
 import type { IAccountType } from '@/network/network-login/login-type'
 
 const loginModule: Module<LoginState, RootState> = {
@@ -19,7 +20,8 @@ const loginModule: Module<LoginState, RootState> = {
     return {
       token: '',
       userInfo: {},
-      userMenu: []
+      userMenu: [],
+      permissions: []
     }
   },
   mutations: {
@@ -36,15 +38,23 @@ const loginModule: Module<LoginState, RootState> = {
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+      // 获取用户的按钮权限
+      const permissions = mapMenusToPermission(userMenu)
+      state.permissions = permissions
     }
   },
   actions: {
-    async accountLoginAction({ commit }, payload: IAccountType) {
+    async accountLoginAction({ commit, dispatch }, payload: IAccountType) {
       // 1.实现登录逻辑
       const loginResult = await accountLoginRequest(payload)
       const { id, token } = loginResult.data
+      console.log(token)
+
       commit('changeToken', token)
       cache.setCache('token', token)
+
+      // 发送初始化的请求(完整的role/department)
+      dispatch('getInitialDataAction', null, { root: true })
 
       // 2.请求用户信息
       const userInfoResult = await requestUserInfoById(id)
@@ -63,10 +73,12 @@ const loginModule: Module<LoginState, RootState> = {
         name: 'main'
       })
     },
-    loadCacheData({ commit }) {
+    loadCacheData({ commit, dispatch }) {
       const token = cache.getCache('token')
       if (token) {
         commit('changeToken', token)
+        // 发送初始化的请求(完整的role/department)
+        dispatch('getInitialDataAction', null, { root: true })
       }
       const userInfo = cache.getCache('userInfo')
       if (userInfo) {

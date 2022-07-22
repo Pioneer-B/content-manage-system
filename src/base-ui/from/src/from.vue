@@ -11,21 +11,30 @@
         </el-col> -->
         <template v-for="item in formItems" :key="item.label">
           <el-col :="colLayout">
-            <el-form-item :label="item.label" :rules="item.rules" :style="itemStyle">
+            <el-form-item
+              :label="item.label"
+              :rules="item.rules"
+              :style="itemStyle"
+              v-if="!item.isHidden"
+            >
               <!-- 1.文字输入框 -->
               <template v-if="item.type === 'input' || item.type === 'password'">
                 <el-input
+                  v-bind="item.otherOptions"
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
-                  v-model="formData[`${item.filed}`]"
+                  :model-value="modelValue[`${item.filed}`]"
+                  @update:modelValue="handleValueChange($event, item.filed)"
                 />
               </template>
               <!-- 2.下拉选择框 -->
               <template v-else-if="item.type === 'select'">
                 <el-select
+                  v-bind="item.otherOptions"
                   :placeholder="item.placeholder"
                   style="width: 100%"
-                  v-model="formData[`${item.filed}`]"
+                  :model-value="modelValue[`${item.filed}`]"
+                  @update:modelValue="handleValueChange($event, item.filed)"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -40,7 +49,8 @@
               <template v-else-if="item.type === 'datepicker'">
                 <el-date-picker
                   :="item.otherOptions"
-                  v-model="formData[`${item.filed}`]"
+                  :model-value="modelValue[`${item.filed}`]"
+                  @update:modelValue="handleValueChange($event, item.filed)"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -55,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { IFormItem } from '../index'
 
 export default defineComponent({
@@ -91,15 +101,23 @@ export default defineComponent({
   emits: ['update:model-value'],
   setup(props, { emit }) {
     // 把formData复制一份，浅拷贝
-    const formData = ref({ ...props.modelValue })
-    watch(
-      formData,
-      (newValue) => {
-        emit('update:model-value', newValue)
-      },
-      { deep: true }
-    )
-    return { formData }
+    // formData对modelValue是没有依赖的，他只是进行了复制拷贝，当modelValue发生改变时，...也不会重新解构
+    // 也可以理解为...不是响应式的，当modelValue发生改变时，...也不会重新解构
+    // const formData = ref({ ...props.modelValue })
+
+    // watch(
+    //   formData,
+    //   (newValue) => {
+    //     // console.log('newValue', newValue)
+
+    //     emit('update:model-value', newValue)
+    //   },
+    //   { deep: true }
+    // )
+    const handleValueChange = (value: any, filed: string) => {
+      emit('update:model-value', { ...props.modelValue, [filed]: value })
+    }
+    return { handleValueChange }
   }
 })
 </script>

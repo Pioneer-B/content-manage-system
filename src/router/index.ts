@@ -36,6 +36,8 @@ const router = createRouter({
 router.beforeEach((to) => {
   if (to.path !== '/login') {
     const token = cache.getCache('token')
+    // console.log(token)
+
     if (!token) {
       return '/login'
     }
@@ -49,3 +51,4 @@ router.beforeEach((to) => {
 })
 
 export default router
+// "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImNvZGVyd2h5Iiwicm9sZSI6eyJpZCI6MSwibmFtZSI6Iui2hee6p-euoeeQhuWRmCJ9LCJpYXQiOjE2NTY5MjA5MzAsImV4cCI6MTY1OTUxMjkzMH0.dhwq5PoWZGFQDGLkcUoLoSDMWWV_TUAgh2fCxyGZMVTwiTNdYDjR5eN6mEo2IIbCTqFZbkS3m3IPn3KvCgNQH4qY9Vyej1vzeL9jT_DKcCsxcsIkD1Xpl1AOsAfJcQWuptvsj1NPmm_Ltwb5LYMGrW7MqHUs3ImKsXqAVkHGEUE"

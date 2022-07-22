@@ -11,7 +11,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>
+          <el-dropdown-item @click="handleExitClick">
             <el-icon><CircleClose /></el-icon>
             <div>退出登录</div>
           </el-dropdown-item>
@@ -32,16 +32,25 @@
 <script lang="ts">
 import { defineComponent, computed, reactive } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
+import localCache from '@/utils/cache'
 import pi from '@/assets/img/pi.jpg'
 
 export default defineComponent({
   setup() {
     const store = useStore()
+    const router = useRouter()
     const name = computed(() => store.state.loginModule.userInfo.name)
     const userInfo = reactive({
       circleUrl: pi
     })
-    return { name, userInfo }
+
+    const handleExitClick = () => {
+      localCache.deleteCache('token')
+      router.push('/login')
+    }
+    return { name, userInfo, handleExitClick }
   }
 })
 </script>

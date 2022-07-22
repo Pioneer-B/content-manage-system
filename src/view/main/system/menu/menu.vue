@@ -1,24 +1,20 @@
 <template>
   <div class="menu">
-    <h2>menu</h2>
-
-    <!-- <h2 @click="click">{{ comput }}</h2> -->
+    <page-content :contentTableConfig="contentTableConfig" pageName="menu" />
   </div>
 </template>
 
 <script lang="ts">
-import { watch, defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
+
+import PageContent from '@/components/page-content/src/page-content.vue'
+
+import { contentTableConfig } from './config/content.config'
 
 export default defineComponent({
-  props: {
-    modelValue: {
-      type: Object,
-      required: true
-    }
-  },
-  emits: ['update:model-value'],
+  components: { PageContent },
   setup(props, { emit }) {
-    return {}
+    return { contentTableConfig }
   }
 })
 </script>

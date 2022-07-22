@@ -116,19 +116,19 @@ class Request {
     })
   }
 
-  get<T>(config: RequestConfig): Promise<T> {
+  get<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'GET' })
   }
 
-  post<T>(config: RequestConfig): Promise<T> {
+  post<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'POST' })
   }
 
-  dedlete<T>(config: RequestConfig): Promise<T> {
+  dedlete<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'DELETE' })
   }
 
-  patch<T>(config: RequestConfig): Promise<T> {
+  patch<T = any>(config: RequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'PATCH' })
   }
 }

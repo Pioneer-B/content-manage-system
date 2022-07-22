@@ -7,7 +7,7 @@
  */
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 // 声明拦截 接口
-export interface RequestInterceptors {
+export interface RequestInterceptors<T = AxiosResponse> {
   requestInterceptors?: (config: AxiosRequestConfig) => AxiosRequestConfig
   requestInterceptorsCatch?: (error: any) => any
   responseInterceptors?: (config: any) => any
@@ -15,8 +15,8 @@ export interface RequestInterceptors {
 }
 
 // 对原来config的类型做拓展，使用Request类时自定义传入哪些拦截函数
-export interface RequestConfig extends AxiosRequestConfig {
-  interceptors?: RequestInterceptors
+export interface RequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
+  interceptors?: RequestInterceptors<T>
   showLoading?: boolean
 }
 /**

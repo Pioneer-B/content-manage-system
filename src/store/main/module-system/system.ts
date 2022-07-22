@@ -1,4 +1,9 @@
-import { getPageListData } from '@/network/main/network-system/network-system'
+import {
+  getPageListData,
+  delatePageDate,
+  createPageData,
+  editPageData
+} from '@/network/main/network-system/network-system'
 import { RootState } from '@/store/index-type'
 import { Module } from 'vuex'
 import { ISystemState } from './system-type'
@@ -10,7 +15,11 @@ const moduleSystem: Module<ISystemState, RootState> = {
       usersList: [],
       usersCount: 0,
       roleList: [],
-      roleCount: 0
+      roleCount: 0,
+      goodsList: [],
+      goodsCount: 0,
+      menuList: [],
+      menuCount: 0
     }
   },
   getters: {
@@ -28,6 +37,11 @@ const moduleSystem: Module<ISystemState, RootState> = {
         //       break
         //   }
       }
+    },
+    pageListCount(state) {
+      return (pageName: string) => {
+        return (state as any)[`${pageName}Count`]
+      }
     }
   },
   mutations: {
@@ -42,6 +56,18 @@ const moduleSystem: Module<ISystemState, RootState> = {
     },
     changeRoleTotalcount(state, totalCount: number) {
       state.roleCount = totalCount
+    },
+    changeGoodsList(state, list: any[]) {
+      state.goodsList = list
+    },
+    changeGoodsTotalcount(state, goodsCount: number) {
+      state.goodsCount = goodsCount
+    },
+    changeMenuList(state, list: any[]) {
+      state.menuList = list
+    },
+    changeMenuTotalcount(state, menuCount: number) {
+      state.menuCount = menuCount
     }
   },
   actions: {
@@ -63,6 +89,7 @@ const moduleSystem: Module<ISystemState, RootState> = {
       // 3.将数据存储到state中
       const { list, totalCount } = pageResult.data
       const handerPageName = (pageName.slice(0, 1) as string).toUpperCase() + pageName.slice(1)
+
       commit(`change${handerPageName}List`, list)
       commit(`change${handerPageName}Totalcount`, totalCount)
 
@@ -76,6 +103,56 @@ const moduleSystem: Module<ISystemState, RootState> = {
       //     commit('changeRoleTotalcount', totalCount)
       //     break
       // }
+    },
+    async deletePageDataAction({ dispatch }, payload: any) {
+      // 1.获取pageName和id
+      // pageName -> /users
+      // id -> /users/id
+      const { pageName, id } = payload
+
+      // 2.调用删除网络请求
+      await delatePageDate(`${pageName}/${id}`)
+
+      // 3.重新请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        data: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+    async createPageDataAction({ dispatch }, payload: any) {
+      // 1.创建数据的请求
+      const { pageName, newData } = payload
+      const pageUrl = `/${pageName}`
+      await createPageData(pageUrl, newData)
+
+      // 2.请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+
+    async editPageDataAction({ dispatch }, payload: any) {
+      // 1.编辑数据的请求
+      const { pageName, editData, id } = payload
+      console.log(editData)
+      const pageUrl = `/${pageName}/${id}`
+      await editPageData(pageUrl, editData)
+
+      // 2.请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
     }
   }
 }

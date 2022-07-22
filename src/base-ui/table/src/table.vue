@@ -17,6 +17,7 @@
       stripe
       min-width="180"
       @selection-change="handleSelectionChange"
+      v-bind="childrenProps"
     >
       <!-- 多选框 -->
       <el-table-column v-if="showSelectColumn" type="selection"> </el-table-column>
@@ -24,7 +25,7 @@
       <el-table-column type="index" label="序号" width="80" v-if="showIndexColumn" align="center">
       </el-table-column>
       <template v-for="item in propList" :key="item.prop">
-        <el-table-column :="item" align="center">
+        <el-table-column :="item" align="center" show-overflow-tooltip>
           <!-- el-table-column里面有一个默认插槽，利用作用域插槽将row(每行的数据)传给使用者 -->
           <template #default="slotProps">
             <!-- 动态添加插槽.   slotProps.row：每行的数据 -->
@@ -36,17 +37,17 @@
       </template>
     </el-table>
     <!-- 插槽-footer栏 -->
-    <div class="footer">
+    <div class="footer" v-if="showFooter">
       <slot name="footer">
         <el-pagination
-          v-model:currentPage="currentPage4"
-          v-model:page-size="pageSize4"
-          :page-sizes="[100, 200, 300, 400]"
+          v-model:currentPage="page.currentPage"
+          v-model:page-size="page.pageSize"
+          :page-sizes="[10, 20, 30, 40]"
           :small="small"
           :disabled="disabled"
           :background="background"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="dataCount"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
@@ -79,28 +80,43 @@ export default defineComponent({
     listData: {
       type: Object,
       required: true
+    },
+    dataCount: {
+      type: Number,
+      default: 0
+    },
+    page: {
+      type: Object,
+      default: () => ({ currentPage: 1, pageSize: 10 })
+    },
+    childrenProps: {
+      type: Object,
+      default: () => ({})
+    },
+    showFooter: {
+      type: Boolean,
+      default: true
     }
   },
-  setup() {
+  setup(props, { emit }) {
     const handleSelectionChange = (value: any) => {
       console.log(value)
     }
 
-    const currentPage4 = ref(4)
-    const pageSize4 = ref(100)
     const small = ref(false)
     const background = ref(false)
     const disabled = ref(false)
-    const handleSizeChange = (val: number) => {
-      console.log(`${val} items per page`)
+    const handleSizeChange = (pageSize: number) => {
+      console.log(`${pageSize} items per page`)
+      emit('update:page', { ...props.page, pageSize })
     }
-    const handleCurrentChange = (val: number) => {
-      console.log(`current page: ${val}`)
+    const handleCurrentChange = (currentPage: number) => {
+      console.log(`current page: ${currentPage}`)
+      emit('update:page', { ...props.page, currentPage })
     }
     return {
       handleSelectionChange,
-      currentPage4,
-      pageSize4,
+
       small,
       background,
       disabled,
